@@ -1,22 +1,17 @@
-name: mobsfscan sarif
+name: "Secrets Scan"
+
 on:
   push:
-    branches: [ master, main ]
+    branches: [ master, main, dev ]
   pull_request:
-    branches: [ master, main ]
+    branches:
+      - master # branch you want to trigger a scan on when updated
+      - main
+      - dev
 
 jobs:
-  mobsfscan:
-    runs-on: ubuntu-latest
-    name: mobsfscan code scanning
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
-    - name: mobsfscan
-      uses: MobSF/mobsfscan@main
-      with:
-        args: '. --sarif --output results.sarif || true'
-    - name: Upload mobsfscan report
-      uses: github/codeql-action/upload-sarif@v1
-      with:
-        sarif_file: results.sarif
+  secret-audit:
+    name: "Trigger Mobile Audit" # modify to suit project name
+    uses: Xttreme/cross-github-actions/.github/workflows/mobile-audit.yaml@mobile
+    with:
+      runs-on: ubuntu-latest
