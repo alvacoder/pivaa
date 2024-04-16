@@ -1,4 +1,4 @@
-name: "Secrets Scan"
+name: "Security Scan"
 
 on:
   push:
@@ -10,8 +10,8 @@ on:
       - dev
 
 jobs:
-  secret-audit:
-    name: "Trigger Mobile Audit" # modify to suit project name
-    uses: Xttreme/cross-github-actions/.github/workflows/mobile-audit.yaml@mobile
+  mobile-audit:
+    name: "Trigger Mobile Audit (Sarif)" # modify to suit project name
+    uses: Xttreme/cross-github-actions/.github/workflows/mobile-scan.yaml@main
     with:
       runs-on: ubuntu-latest
