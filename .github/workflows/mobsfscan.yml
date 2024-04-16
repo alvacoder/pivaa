@@ -7,13 +7,8 @@ on:
     branches: [ master, main ]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: mobsfscan
-      uses: MobSF/mobsfscan@main
-      with:
-        args: '.'
+  mobile-audit:
+    name: "Trigger Mobile Audit" # modify to suit project name
+    uses: Xttreme/cross-github-actions/.github/workflows/mobile-scan.yaml@main
+    with:
+      runs-on: ubuntu-latest
