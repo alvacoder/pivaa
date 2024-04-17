@@ -9,6 +9,6 @@ on:
 jobs:
   mobile-audit:
     name: "Trigger Mobile Audit" # modify to suit project name
-    uses: Xttreme/cross-github-actions/.github/workflows/mobile-scan.yaml@main
+    uses: Xttreme/cross-github-actions/.github/workflows/mobile-scan.yaml@dev
     with:
       runs-on: ubuntu-latest
