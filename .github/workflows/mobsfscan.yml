@@ -9,29 +9,7 @@ on:
 jobs:
   mobile-audit:
     name: "Trigger Mobile Audit" # modify to suit project name
-    uses: Xttreme/cross-github-actions/.github/workflows/mobile-scan.yaml@dev
+    uses: Xttreme/cross-github-actions/.github/workflows/mobile-scan.yaml@iac
     with:
       runs-on: ubuntu-latest
-  # slack-notify:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Send GitHub Action trigger data to Slack workflow
-  #       uses: slackapi/slack-github-action@v1.25.0
-  #       with:
-  #         # For posting a rich message using Block Kit
-  #         payload: |
-  #           {
-  #             "text": "GitHub Action build result",
-  #             "blocks": [
-  #               {
-  #                 "type": "section",
-  #                 "text": {
-  #                   "type": "mrkdwn",
-  #                   "text": "GitHub Action build result: "
-  #                 }
-  #               }
-  #             ]
-  #           }
-  #       env:
-  #         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  #         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      secrets: inherit
