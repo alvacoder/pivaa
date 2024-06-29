@@ -6,17 +6,14 @@ on:
   pull_request:
     branches: [ master, main, dev ]
 
-# jobs:
-  # mobile-audit:
-  #   name: "Trigger Mobile Audit" # modify to suit project name
-  #   uses: Xttreme/cross-github-actions/.github/workflows/mobile-scan.yaml@main
-  #   with:
-  #     runs-on: ubuntu-latest
-  #     secrets: inherit
 jobs:
-  mobsf-scan:
-    name: "Trigger MobSF Scan"
+  mobile-audit:
+    name: "Trigger Mobile Audit" # modify to suit project name
     uses: Xttreme/cross-github-actions/.github/workflows/mobile-scan.yaml@main
+    with:
+      runs-on: ubuntu-latest
+      secrets: inherit
+
   # slack-alert:
   #   runs-on: ubuntu-latest
   #   steps:
