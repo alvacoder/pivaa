@@ -2,18 +2,37 @@ name: mobsfscan
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ master, main, dev ]
   pull_request:
-    branches: [ master, main ]
+    branches: [ master, main, dev ]
 
 jobs:
-  build:
+  mobile-audit:
+    name: "Trigger Mobile Audit" # modify to suit project name
+    uses: Xttreme/cross-github-actions/.github/workflows/mobile-scan.yaml@main
+    with:
+      runs-on: ubuntu-latest
+      secrets: inherit
 
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: mobsfscan
-      uses: MobSF/mobsfscan@main
-      with:
-        args: '.'
+  # slack-alert:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Post Slack Alert
+  #       uses: slackapi/slack-github-action@v1.25.0
+  #       with:
+  #         payload: |
+  #           {
+  #             "text": "GitHub Action build result: ${{ steps.mobsf-scan.outcome }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+  #             "blocks": [
+  #               {
+  #                 "type": "section",
+  #                 "text": {
+  #                   "type": "mrkdwn",
+  #                   "text": "GitHub Action build result: ${{ steps.mobsf-scan.outcome }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+  #                 }
+  #               }
+  #             ]
+  #           }
+  #       env:
+  #         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_SECURITY_ALERT_WEBHOOK_URL }}
+  #         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
