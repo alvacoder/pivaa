@@ -50,6 +50,7 @@ jobs:
             opensecurity/mobsfscan@sha256:520b572b6d77333266109d873961029e06c83d5c2d7585ef346f433d4b9911ab /src 
 
       - name: Generate mobile app scan report
+        if: always()
         shell: bash
         run: |
           docker pull opensecurity/mobsfscan@sha256:520b572b6d77333266109d873961029e06c83d5c2d7585ef346f433d4b9911ab
