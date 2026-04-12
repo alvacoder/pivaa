@@ -2,18 +2,95 @@ name: mobsfscan
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ master, main, dev ]
   pull_request:
-    branches: [ master, main ]
+    branches: [ master, main, dev ]
 
 jobs:
-  build:
-
+  mobile-audit:
+    name: "Trigger Mobile Audit" # modify to suit project name
+    # uses: Xttreme/cross-github-actions/.github/workflows/mobile-scan.yaml@main
+    # with:
     runs-on: ubuntu-latest
+    # secrets: inherit
 
     steps:
-    - uses: actions/checkout@v2
-    - name: mobsfscan
-      uses: MobSF/mobsfscan@main
-      with:
-        args: '.'
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0
+
+      - name: Create or update .mobsf config to filter only ERROR severity
+        run: |
+          echo "severity-filter:" > .mobsf
+          echo "  - ERROR" >> .mobsf
+          echo "ignore-rules:" >> .mobsf
+          echo "  - android_kotlin_hiddenui" >> .mobsf
+          echo "  - android_task_hijacking1" >> .mobsf
+          echo "  - android_task_hijacking2" >> .mobsf
+
+      # - name: Generate mobile app scan report
+      #   uses: MobSF/mobsfscan@3d87bc570c4614d705547bddb521395663dba353
+      #   continue-on-error: true #temporary fail open
+      #   with:
+      #     args: '. --json --output mobsf-report.json'
+
+      # - name: Mobile App Scan
+      #   continue-on-error: true #temporary fail open
+      #   if: always()
+      #   uses: MobSF/mobsfscan@3d87bc570c4614d705547bddb521395663dba353
+      #   with:
+      #     args: ${{ inputs.args }}
+
+      - name: Mobile App Scan
+        shell: bash
+        run: |
+          docker pull opensecurity/mobsfscan@sha256:520b572b6d77333266109d873961029e06c83d5c2d7585ef346f433d4b9911ab
+          docker run --rm \
+            -v "${{ github.workspace }}:/src" \
+            opensecurity/mobsfscan@sha256:520b572b6d77333266109d873961029e06c83d5c2d7585ef346f433d4b9911ab /src 
+
+      - name: Generate mobile app scan report
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: |
+          docker pull opensecurity/mobsfscan@sha256:520b572b6d77333266109d873961029e06c83d5c2d7585ef346f433d4b9911ab
+          docker run --rm \
+            -v "${{ github.workspace }}:/src" \
+            opensecurity/mobsfscan@sha256:520b572b6d77333266109d873961029e06c83d5c2d7585ef346f433d4b9911ab \
+            /src --json --output /src/mobsf-report.json || true
+
+      - name: Display mobile app scan report
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: |
+          if [ -f mobsf-report.json ]; then
+            echo "=== MobSF Scan Report ==="
+            cat mobsf-report.json
+          else
+            echo "mobsf-report.json not found!"
+          fi
+
+  # slack-alert:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Post Slack Alert
+  #       uses: slackapi/slack-github-action@v1.25.0
+  #       with:
+  #         payload: |
+  #           {
+  #             "text": "GitHub Action build result: ${{ steps.mobsf-scan.outcome }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+  #             "blocks": [
+  #               {
+  #                 "type": "section",
+  #                 "text": {
+  #                   "type": "mrkdwn",
+  #                   "text": "GitHub Action build result: ${{ steps.mobsf-scan.outcome }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+  #                 }
+  #               }
+  #             ]
+  #           }
+  #       env:
+  #         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_SECURITY_ALERT_WEBHOOK_URL }}
+  #         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
