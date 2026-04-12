@@ -63,6 +63,7 @@ jobs:
         if: always()
         shell: bash
         run: |
+          cd ${{ github.workspace }}
           ls
 
   # slack-alert:
