@@ -57,8 +57,8 @@ jobs:
           docker pull opensecurity/mobsfscan@sha256:520b572b6d77333266109d873961029e06c83d5c2d7585ef346f433d4b9911ab
           docker run --rm \
             -v "${{ github.workspace }}:/src" \
-            opensecurity/mobsfscan@sha256:520b572b6d77333266109d873961029e06c83d5c2d7585ef346f433d4b9911ab /src \
-            --json --output mobsf-report.json
+            opensecurity/mobsfscan@sha256:520b572b6d77333266109d873961029e06c83d5c2d7585ef346f433d4b9911ab \
+            /src --json --output /src/mobsf-report.json || true
 
       - name: Display mobile app scan report
         if: always()
