@@ -12,7 +12,7 @@ jobs:
     # uses: Xttreme/cross-github-actions/.github/workflows/mobile-scan.yaml@main
     # with:
     runs-on: ubuntu-latest
-    secrets: inherit
+    # secrets: inherit
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
