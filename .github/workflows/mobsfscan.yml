@@ -10,9 +10,9 @@ jobs:
   mobile-audit:
     name: "Trigger Mobile Audit" # modify to suit project name
     # uses: Xttreme/cross-github-actions/.github/workflows/mobile-scan.yaml@main
-    with:
-      runs-on: ubuntu-latest
-      secrets: inherit
+    # with:
+    runs-on: ubuntu-latest
+    secrets: inherit
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
