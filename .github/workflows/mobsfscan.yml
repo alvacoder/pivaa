@@ -59,6 +59,12 @@ jobs:
             opensecurity/mobsfscan@sha256:520b572b6d77333266109d873961029e06c83d5c2d7585ef346f433d4b9911ab /src \
             --json --output mobsf-report.json
 
+      - name: List files
+        if: always()
+        shell: bash
+        run: |
+          ls
+
   # slack-alert:
   #   runs-on: ubuntu-latest
   #   steps:
